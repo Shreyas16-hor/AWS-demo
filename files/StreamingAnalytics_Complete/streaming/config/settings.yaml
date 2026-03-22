@@ -1,0 +1,67 @@
+# config/settings.yaml
+# Central configuration for the streaming analytics pipeline
+# All values can be overridden with environment variables
+
+kafka:
+  brokers: "localhost:9092"
+  topic:   "user-events"
+  consumer_group: "streaming-analytics"
+  auto_offset_reset: "latest"
+  max_offsets_per_trigger: 10000
+  # Security (production)
+  # security_protocol: SASL_SSL
+  # sasl_mechanism: PLAIN
+
+spark:
+  app_name:          "RealTimeStreamingAnalytics"
+  master:            "local[*]"          # use all CPU cores
+  micro_batch_secs:  5
+  checkpoint_dir:    "/tmp/spark-checkpoints"
+  shuffle_partitions: 8
+  driver_memory:     "2g"
+  executor_memory:   "2g"
+  log_level:         "WARN"
+
+delta_lake:
+  base_path:         "/tmp/delta/events"
+  tables:
+    metrics_1min:    "/tmp/delta/events/metrics_1min"
+    metrics_5min:    "/tmp/delta/events/metrics_5min"
+    top_pages:       "/tmp/delta/events/top_pages"
+    revenue:         "/tmp/delta/events/revenue"
+    raw_events:      "/tmp/delta/events/raw"
+
+elasticsearch:
+  host:              "http://localhost:9200"
+  alerts_index:      "streaming-alerts"
+  metrics_index:     "streaming-metrics"
+  timeout:           5
+
+anomaly_detection:
+  z_score_threshold:   2.5    # standard deviations for alert
+  min_samples:         10     # warmup period before detecting
+  drop_threshold:      0.40   # 40% drop triggers alert
+  spike_multiplier:    3.0    # 3x normal triggers spike alert
+  revenue_drop_pct:    0.30   # 30% revenue drop triggers alert
+  window_size:         20     # rolling baseline window
+
+windows:
+  short:    "1 minute"
+  long:     "5 minutes"
+  slide:    "30 seconds"
+  watermark: "10 seconds"
+
+producer:
+  events_per_second:   10.0
+  burst_every_secs:    30
+  burst_size:          50
+
+dashboard:
+  port:                8501
+  refresh_interval:    5     # seconds
+  max_history_rows:    60    # rows to show in charts
+
+logging:
+  level:     "INFO"
+  format:    "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+  file:      "/tmp/streaming_analytics.log"
