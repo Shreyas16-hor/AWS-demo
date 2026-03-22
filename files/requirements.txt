@@ -1,0 +1,24 @@
+# Core streaming
+pyspark==3.3.2
+kafka-python==2.0.2
+delta-spark==2.3.0
+
+# Dashboard
+streamlit==1.28.0
+plotly==5.17.0
+pandas==2.1.1
+
+# Search / alerting
+elasticsearch==8.10.0
+
+# Utilities
+pyyaml==6.0.1
+python-dotenv==1.0.0
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+
+# Optional — for Avro schema registry
+# fastavro==1.8.4
+# confluent-kafka==2.3.0
